@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: stripe
+    database: dbt-tutorial
+    schema: stripe
+    tables:
+      - name: payment
+        description: raw stripe payment data
+        columns: 
+          - name: status
+            description: raw stripe payment status column
+            tests: 
+              - accepted_values:
+                  values: ['success', 'fail']
+        loaded_at_field: _batched_at
+        freshness:
+          warn_after: {count: 12, period: hour}
+          error_after: {count: 24, period: hour}
